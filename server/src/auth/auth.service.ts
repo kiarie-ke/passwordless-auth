@@ -232,4 +232,17 @@ export class AuthService {
 
         throw new UnauthorizedException('Authentication verification failed');
     }
+
+    async getAuthenticators(userId: string) {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+        if (!user) {
+            throw new UnauthorizedException('User not found');
+        }
+
+        return this.authenticatorRepository.find({
+            where: { user: { id: user.id } },
+        });
+    }
 }
